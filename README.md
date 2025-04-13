@@ -137,12 +137,18 @@ fmt.Println(bybit.PrettyPrint(accountResult))
 
 ### Websocket public channel
 - Order book Subscribe
+
 ```go
 ws := bybit.NewBybitPublicWebSocket("wss://stream.bybit.com/v5/public/spot", func(message string) error {
 fmt.Println("Received:", message)
 return nil
 })
-_ = ws.Connect([]string{"orderbook.1.BTCUSDT"})
+_ = ws.Connect()
+_, err := ws.SendSubscription([]string{"orderbook.1.BTCUSDT"})
+if err != nil {
+	fmt.Println(err)
+	return nil
+}
 select {}
 ```
 
@@ -152,7 +158,12 @@ ws := bybit.NewBybitPrivateWebSocket("wss://stream-testnet.bybit.com/v5/private"
 	fmt.Println("Received:", message)
 	return nil
 })
-_ = ws.Connect([]string{"order"})
+_ = ws.Connect()
+_, err := ws.SendSubscription([]string{"order"})
+if err != nil {
+	fmt.Println(err)
+	return nil
+}
 select {}
 ```
 
